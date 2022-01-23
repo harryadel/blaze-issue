@@ -1,4 +1,4 @@
-it's a reproduction for blaze issue `#213`
+it's a reproduction for blaze issue [#213](https://github.com/meteor/blaze/issues/213)
 
 Steps
  - run project using `meteor`
