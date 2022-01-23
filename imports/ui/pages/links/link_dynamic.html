@@ -1,0 +1,9 @@
+<template name="link_dynamic">
+
+  {{!-- The below button renders for specific case --}}
+  {{!-- that logic is not important for this reproduction --}}
+  <button type="button" class="go-back" name="button" hidden>
+    Go back
+  </button>
+  {{> Template.dynamic template=target}}
+</template>
