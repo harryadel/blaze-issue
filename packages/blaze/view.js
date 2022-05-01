@@ -272,8 +272,16 @@ Blaze._fireCallbacks = function (view, which) {
   Blaze._withCurrentView(view, function () {
     Tracker.nonreactive(function fireCallbacks() {
       var cbs = view._callbacks[which];
-      for (var i = 0, N = (cbs && cbs.length); i < N; i++)
-        cbs[i] && cbs[i].call(view);
+      for (var i = 0, N = (cbs && cbs.length); i < N; i++) {
+        const cb = cbs[i];
+        if (cb) {
+          try {
+            cb.call(view);
+          } catch (e) {
+            Blaze._reportException(e, `expection in callback ${which}`)
+          }
+        }
+      }
     });
   });
 };
