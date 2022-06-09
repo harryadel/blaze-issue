@@ -152,6 +152,7 @@ Template.prototype.constructView = function (contentFunc, elseFunc) {
       }
 
       self.__eventMaps.forEach(function (m) {
+        // console.log("EMM", m)
         Blaze._addEventMap(view, m, view);
       });
     });

@@ -40,7 +40,7 @@
  * @param {String} [name] Optional.  A name for this type of View.  See [`view.name`](#view_name).
  * @param {Function} renderFunction A function that returns [*renderable content*](#Renderable-Content).  In this function, `this` is bound to the View.
  */
-Blaze.View = function (name, render) {
+ Blaze.View = function (name, render) {
   if (! (this instanceof Blaze.View))
     // called without `new`
     return new Blaze.View(name, render);
@@ -272,16 +272,8 @@ Blaze._fireCallbacks = function (view, which) {
   Blaze._withCurrentView(view, function () {
     Tracker.nonreactive(function fireCallbacks() {
       var cbs = view._callbacks[which];
-      for (var i = 0, N = (cbs && cbs.length); i < N; i++) {
-        const cb = cbs[i];
-        if (cb) {
-          try {
-            cb.call(view);
-          } catch (e) {
-            Blaze._reportException(e, `expection in callback ${which}`)
-          }
-        }
-      }
+      for (var i = 0, N = (cbs && cbs.length); i < N; i++)
+        cbs[i] && cbs[i].call(view);
     });
   });
 };
@@ -502,11 +494,15 @@ Blaze._destroyView = function (view, _skipNodes) {
   // only recurse up to views, not elements, for the case where
   // the backend (jQuery) is recursing over the elements already.
 
-  if (view._domrange)
-    view._domrange.destroyMembers(_skipNodes);
+  if (view._domrange) view._domrange.destroyMembers(_skipNodes);
 
-    Blaze._fireCallbacks(view, 'destroyed');
-  };
+  // XXX: fire callbacks after potential members are destroyed
+  // otherwise it's tracker.flush will cause the above line will
+  // not be called and their views won't be destroyed
+  // Involved issues: DOMRange "Must be attached" error, mem leak
+  
+  Blaze._fireCallbacks(view, 'destroyed');
+};
 
 Blaze._destroyNode = function (node) {
   if (node.nodeType === 1)
@@ -702,8 +698,10 @@ Blaze.remove = function (view) {
     if (! view.isDestroyed) {
       var range = view._domrange;
       range.destroy();
-      if (range.attached && ! range.parentRange)
-      range.detach();
+
+      if (range.attached && ! range.parentRange) {
+        range.detach();
+      }
     }
 
     view = view._hasGeneratedParent && view.parentView;

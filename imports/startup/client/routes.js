@@ -3,9 +3,8 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 // Import needed templates
 import '../../ui/layouts/body/body.js';
 import '../../ui/pages/home/home.js';
-import '../../ui/pages/links/link.js';
-import '../../ui/pages/links/link_edit.js';
-import '../../ui/pages/links/link_dynamic.js';
+import '../../ui/pages/templates/child_template.js';
+import '../../ui/pages/templates/parent_template.js';
 import '../../ui/pages/not-found/not-found.js';
 
 // Set up all routes in the app
@@ -26,7 +25,7 @@ FlowRouter.route('*', {
 FlowRouter.route('/link/:id', {
   name: 'link',
   action() {
-    this.render('App_body', 'link_dynamic');
+    this.render('App_body', 'parent_template');
   },
 });
 

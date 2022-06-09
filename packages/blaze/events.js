@@ -46,6 +46,7 @@ var HandlerRec = function (elem, type, selector, handler, recipient) {
       if ((! h.selector) && evt.currentTarget !== evt.target)
         // no selector means only fire on target
         return;
+        console.log("AITCH", h)
       return h.handler.apply(h.recipient, arguments);
     };
   })(this);

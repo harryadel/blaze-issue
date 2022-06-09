@@ -1,12 +1,11 @@
-import './link_not_supported.html';
-
+import './child_template.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 
-Template.link_not_supported.events({
+Template.child_template.events({
   'click .go-back'(event) {
+    console.log("CHILD TEMPLATE")
     event.preventDefault();
-    // history.back()
     FlowRouter.go('/')
   }
 })
